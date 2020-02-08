@@ -1,5 +1,6 @@
 package Flow
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
@@ -18,13 +19,26 @@ import kotlinx.coroutines.runBlocking
 
     .transform
     - transforms the values to anything we want
+
+    .take
+    - use only certain number of values, disregard the rest
+
+    terminal flow (collect, toList, toSet, reduce)
+    - convert the flow into a collection
+    - reduce: perform operation with an accumulator
+
+    .flowOn
+    - switch the context on which the flow is emitted
  */
 
 fun main() {
     runBlocking {
 //        mapOperator()
 //        filterOperator()
-        transformOperator()
+//        transformOperator()
+//        takeOperator()
+//        reduceOperator()
+        flowOnOperator()
     }
 }
 
@@ -55,6 +69,25 @@ suspend fun transformOperator() {
             emit("Emitting string value: $it")
             emit(it)
         }
+        .collect {
+            println(it)
+        }
+}
+
+suspend fun reduceOperator() {
+    val size = 10
+    val factorial = (1..size).asFlow()
+        .reduce { accumulator, value ->
+            println("A: $accumulator --- V: $value")
+            accumulator * value
+        }
+    println(factorial)
+
+}
+
+suspend fun flowOnOperator() {
+    (1..10).asFlow()
+        .flowOn(Dispatchers.IO)
         .collect {
             println(it)
         }
