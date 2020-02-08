@@ -1,4 +1,4 @@
-package Flow
+package flows
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
